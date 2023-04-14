@@ -1,49 +1,30 @@
 // Dependencies
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+const express = require('express'); // Import the express package
 
-// Set up the Express App
+// Import custom route modules
+const apiRoutes = require('./routes/apiRoutes.js');
+const htmlRoutes = require('./routes/htmlRoutes.js');
+
+// Initialize the express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Set up the server's listening port
+const PORT = process.env.PORT || 3001;
+
+// Middleware to parse incoming request bodies (e.g., form data)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
 
-// Load notes from the JSON file
-let notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
+// Middleware to serve static files from the 'public' folder
+app.use(express.static('public'));
 
-// Routes
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public', 'notes.html')));
+// Mount API routes under the '/api' path
+app.use('/api', apiRoutes);
 
-app.get('/api/notes', (req, res) => res.json(notes));
+// Mount HTML routes under the root path '/'
+app.use('/', htmlRoutes);
 
-app.post('/api/notes', (req, res) => {
-  const newNote = {
-    id: uuidv4(),
-    title: req.body.title,
-    text: req.body.text
-  };
-
-  notes.push(newNote);
-  fs.writeFileSync(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes));
-
-  res.json(newNote);
+// Start the server and listen for incoming requests on the specified port
+app.listen(PORT, () => {
+console.log(API server is ready on port ${PORT}!);
 });
-
-app.delete('/api/notes/:id', (req, res) => {
-  const noteIdToRemove = req.params.id;
-
-  notes = notes.filter(note => note.id !== noteIdToRemove);
-  fs.writeFileSync(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes));
-
-  res.send("Note deleted.");
-});
-
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-
-// Start the server
-app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
