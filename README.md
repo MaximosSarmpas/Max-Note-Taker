@@ -1,6 +1,7 @@
 # Note Taker
   ![Github License](https://img.shields.io/badge/license-MIT-green)
-  
+  ![Screenshot 2023-04-17 165435](https://user-images.githubusercontent.com/117605647/232609211-3b1d4cc4-d530-4397-8166-e346df8dc84b.png)
+
   Deployed in Heroku LINK: https://thawing-plains-48231.herokuapp.com/notes
   ## Table of Contents
   
