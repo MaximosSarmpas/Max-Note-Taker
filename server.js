@@ -26,5 +26,5 @@ app.use('/', htmlRoutes);
 
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
-console.log(API server is ready on port ${PORT}!);
+console.log('API server is ready on port ${PORT}!');
 });
